@@ -65,6 +65,28 @@
 <script>
 async function getData() {
     try {
+        let url = "https://corsproxy.io/?https://api.binance.com/api/v3/klines?symbol=XAUUSDT&interval=1m&limit=20";
+        
+        let response = await fetch(url);
+        let data = await response.json();
+
+        document.getElementById("status").innerHTML = "Data M1 diterima ✔";
+
+        return data.map(c => ({
+            open: parseFloat(c[1]),
+            high: parseFloat(c[2]),
+            low:  parseFloat(c[3]),
+            close:parseFloat(c[4])
+        }));
+    } catch (e) {
+        document.getElementById("status").innerHTML = "Gagal mengambil data...";
+        console.log("Error:", e);
+        return [];
+    }
+}
+</script>
+}
+</script>   try {
         let url = "https://api.binance.com/api/v3/klines?symbol=XAUUSDT&interval=1m&limit=20";
         let response = await fetch(url);
         let data = await response.json();
