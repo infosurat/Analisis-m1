@@ -14,40 +14,59 @@
       --green-dark: #0b6b4f;
       --bg-soft: #f8fafc;
       --white: #ffffff;
+      --border: #cbd5e1;
       --radius: 12px;
     }
 
     * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { margin: 0; background: var(--bg-soft); color: #1e293b; }
+    body { margin: 0; background: var(--bg-soft); color: #1e293b; overflow-x: hidden; }
 
     /* Login & UI */
     .hidden { display: none !important; }
     .center-wrap { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--green-primary); padding: 16px; }
     .login-card { width: 100%; max-width: 380px; background: var(--white); padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .btn { background: var(--green-primary); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; }
-    .btn:hover { background: var(--green-dark); }
     
     .topbar { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
 
     /* Dashboard Cards */
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
     .stat-card { background: var(--white); padding: 25px; border-radius: var(--radius); cursor: pointer; text-align: center; border: 1px solid #e2e8f0; transition: 0.3s; }
     .stat-card:hover { transform: translateY(-5px); border-color: var(--green-primary); }
-    .stat-card .icon { font-size: 30px; margin-bottom: 10px; display: block; }
 
-    /* Table & Form Styles */
+    /* Form Styles */
     .content-section { background: var(--white); padding: 25px; border-radius: var(--radius); border: 1px solid #e2e8f0; margin-bottom: 25px; }
-    input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; margin-top: 5px; margin-bottom: 15px; }
+    input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-top: 5px; margin-bottom: 15px; font-size: 14px; }
+    .btn { background: var(--green-primary); color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+    .btn:hover { background: var(--green-dark); }
     
-    .table-wrapper { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { background: #f8fafc; padding: 12px; text-align: left; border: 1px solid #e2e8f0; color: #64748b; }
-    td { padding: 10px; border: 1px solid #e2e8f0; }
-    .btn-delete { background: #fee2e2; color: #ef4444; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    /* TABLE STYLES (DIPERBAIKI AGAR TIDAK TERHIMPIT) */
+    .table-wrapper { width: 100%; overflow-x: auto; background: white; padding: 5px; }
+    table { width: 100% !important; border-collapse: collapse; min-width: 900px; }
+    
+    th, td { 
+      border: 1px solid #94a3b8; /* Garis lebih jelas */
+      padding: 14px 10px !important; /* Padding lebih luas agar tidak mepet */
+      text-align: left;
+      font-size: 13px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
 
-    /* Khusus PDF agar tidak terpotong */
-    #pdfHeader { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+    th { background: #f1f5f9; color: #334155; font-weight: 700; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+    
+    /* Mencegah Tanggal terhimpit */
+    td:nth-child(3), td:nth-child(5) { 
+      white-space: nowrap; /* Tanggal tetap satu baris */
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .btn-delete { background: #fee2e2; color: #ef4444; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+    /* Export PDF Header */
+    #pdfHeader { text-align: center; margin-bottom: 25px; border-bottom: 3px double #333; padding-bottom: 15px; }
+    #pdfHeader h2 { margin: 0; font-size: 20px; color: black; }
   </style>
 </head>
 <body>
@@ -55,11 +74,11 @@
 <div class="center-wrap" id="loginPage">
   <div class="login-card">
     <img src="https://i.imgur.com/mnBT8hv.png" width="80" style="margin-bottom:15px;">
-    <h2 style="color:var(--green-primary); margin-top:0;">E-Surat Seberuang</h2>
+    <h2 style="color:var(--green-primary); margin:0 0 25px 0;">E-Surat Seberuang</h2>
     <form id="loginForm">
       <input type="text" id="username" placeholder="Username" required />
       <input type="password" id="password" placeholder="Password" required />
-      <button type="submit" class="btn">Masuk Ke Sistem</button>
+      <button type="submit" class="btn" style="width:100%">Masuk Ke Sistem</button>
       <p id="error" style="color:red; font-size:12px; margin-top:10px;"></p>
     </form>
   </div>
@@ -69,56 +88,56 @@
   <nav class="topbar">
     <div style="display:flex; align-items:center; gap:10px;">
       <img src="https://i.imgur.com/mnBT8hv.png" height="35">
-      <strong style="color:var(--green-primary)">Sistem e-Surat</strong>
+      <strong style="color:var(--green-primary); font-size:18px;">e-Surat Seberuang</strong>
     </div>
-    <button onclick="logout()" style="background:#f1f5f9; border:none; padding:8px 15px; border-radius:6px; cursor:pointer;">Keluar</button>
+    <button onclick="logout()" class="btn" style="background:#f1f5f9; color:#334155; padding:8px 15px;">Keluar</button>
   </nav>
 
   <div class="container">
     <div class="cards-grid">
-      <div class="stat-card" id="btnMasuk"><span class="icon">📥</span><strong>Surat Masuk</strong></div>
-      <div class="stat-card" id="btnKeluar"><span class="icon">📤</span><strong>Surat Keluar</strong></div>
+      <div class="stat-card" id="btnMasuk"><span style="font-size:30px; display:block;">📥</span><strong>Surat Masuk</strong></div>
+      <div class="stat-card" id="btnKeluar"><span style="font-size:30px; display:block;">📤</span><strong>Surat Keluar</strong></div>
       <div class="stat-card" onclick="window.location.href='https://infosurat.github.io/kertas-disposisi/'">
-        <span class="icon">📄</span><strong>Disposisi</strong>
+        <span style="font-size:30px; display:block;">📄</span><strong>Disposisi</strong>
       </div>
     </div>
 
     <section id="formArea" class="content-section hidden">
-      <h3 id="formTitle" style="margin-top:0;">Form Input</h3>
+      <h3 id="formTitle" style="margin-top:0; border-left:4px solid var(--green-primary); padding-left:10px;">Form Input</h3>
       <form id="suratForm">
-        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px;">
-          <div><label>Nomor Agenda</label><input type="text" id="nomor" required></div>
-          <div><label>Nomor Surat</label><input type="text" id="nomorSurat" required></div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px;">
+          <div><label>Nomor Agenda</label><input type="text" id="nomor" required placeholder="Contoh: 001"></div>
+          <div><label>Nomor Surat</label><input type="text" id="nomorSurat" required placeholder="Nomor resmi surat"></div>
           <div><label>Tanggal Surat</label><input type="date" id="tanggalSurat" required></div>
-          <div><label>Perihal</label><input type="text" id="hal" required></div>
-          <div><label id="tglLabel">Tanggal</label><input type="date" id="tanggalKirimTerima" required></div>
-          <div><label id="asalTujuanLabel">Asal/Tujuan</label><input type="text" id="asalTujuan" required></div>
+          <div><label>Perihal / Hal</label><input type="text" id="hal" required placeholder="Isi perihal surat"></div>
+          <div><label id="tglLabel">Tanggal Update</label><input type="date" id="tanggalKirimTerima" required></div>
+          <div><label id="asalTujuanLabel">Asal / Tujuan</label><input type="text" id="asalTujuan" required placeholder="Nama instansi/orang"></div>
         </div>
-        <button type="submit" class="btn" style="width:auto;">Simpan Data</button>
+        <button type="submit" class="btn" style="margin-top:10px;">Simpan Data Ke Database</button>
       </form>
     </section>
 
     <section id="tableDisplay" class="content-section hidden">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h3 id="tableTitle" style="margin:0;">Daftar Surat</h3>
-        <button onclick="downloadPDF()" style="background:#334155; color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; font-weight:600;">Download Laporan PDF</button>
+        <button onclick="downloadPDF()" style="background:#1e293b; color:white;" class="btn">Download PDF (Landscape)</button>
       </div>
 
       <div id="tableSection" class="table-wrapper">
         <div id="pdfHeader" class="hidden">
-            <h2 style="margin:0;">LAPORAN E-SURAT KECAMATAN SEBERUANG</h2>
-            <p id="pdfSubTitle" style="margin:5px 0; font-weight:bold;"></p>
+            <h2>LAPORAN DATA E-SURAT KECAMATAN SEBERUANG</h2>
+            <p id="pdfSubTitle" style="text-transform:uppercase; letter-spacing:1px;"></p>
         </div>
         <table id="mainTable">
           <thead>
             <tr>
-              <th>No. Agenda</th>
+              <th style="width:50px">No</th>
               <th>Nomor Surat</th>
-              <th>Tgl Surat</th>
-              <th>Perihal</th>
-              <th>Tgl Update</th>
+              <th style="width:110px">Tgl Surat</th>
+              <th>Perihal / Hal</th>
+              <th style="width:110px">Tgl Update</th>
               <th>Asal / Tujuan</th>
-              <th class="action-col">Aksi</th>
+              <th class="action-col" style="width:80px">Aksi</th>
             </tr>
           </thead>
           <tbody id="dataBody"></tbody>
@@ -134,14 +153,14 @@ const ENDPOINT_MASUK = "https://sheetdb.io/api/v1/f10drm0h22cjz";
 const ENDPOINT_KELUAR = "https://sheetdb.io/api/v1/247yl7pptsbkc";
 let endpointAktif = null;
 
-// AUTH LOGIC
+// AUTH
 document.getElementById('loginForm').onsubmit = (e) => {
   e.preventDefault();
   if (akun[username.value] === password.value) {
     localStorage.setItem("user", username.value);
     showDashboard();
   } else {
-    document.getElementById('error').textContent = "Username/Password Salah!";
+    document.getElementById('error').textContent = "Username atau Password Salah!";
   }
 };
 
@@ -167,71 +186,88 @@ async function initTable(jenis) {
 
 suratForm.onsubmit = async (e) => {
   e.preventDefault();
+  const saveBtn = e.target.querySelector('button');
+  saveBtn.textContent = "Menyimpan...";
+  saveBtn.disabled = true;
+
   const data = [{
     Nomor: nomor.value, Nomor_Surat: nomorSurat.value, Tanggal_Surat: tanggalSurat.value,
     Hal: hal.value, Tanggal_Diterima_Dikirim: tanggalKirimTerima.value, Asal_Tujuan_Surat: asalTujuan.value
   }];
-  await fetch(endpointAktif, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({data}) });
-  alert("Data Berhasil Disimpan!");
-  suratForm.reset();
-  loadData();
+  
+  try {
+    await fetch(endpointAktif, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify({data}) });
+    alert("Data Berhasil Disimpan!");
+    suratForm.reset();
+    loadData();
+  } catch(err) {
+    alert("Gagal menyimpan data!");
+  } finally {
+    saveBtn.textContent = "Simpan Data Ke Database";
+    saveBtn.disabled = false;
+  }
 };
 
 async function loadData() {
+  dataBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat Data...</td></tr>';
   const res = await fetch(endpointAktif);
   const data = await res.json();
   dataBody.innerHTML = data.map(d => `
     <tr>
-      <td>${d.Nomor}</td><td>${d.Nomor_Surat}</td><td>${d.Tanggal_Surat}</td>
-      <td>${d.Hal}</td><td>${d.Tanggal_Diterima_Dikirim}</td><td>${d.Asal_Tujuan_Surat}</td>
-      <td class="action-col"><button class="btn-delete" onclick="hapus('${d.Nomor}')">Hapus</button></td>
+      <td style="text-align:center;">${d.Nomor}</td>
+      <td>${d.Nomor_Surat}</td>
+      <td>${d.Tanggal_Surat}</td>
+      <td>${d.Hal}</td>
+      <td>${d.Tanggal_Diterima_Dikirim}</td>
+      <td>${d.Asal_Tujuan_Surat}</td>
+      <td class="action-col" style="text-align:center;">
+        <button class="btn-delete" onclick="hapus('${d.Nomor}')">Hapus</button>
+      </td>
     </tr>`).join('');
 }
 
 async function hapus(id) {
-  if (confirm("Hapus data " + id + "?")) {
+  if (confirm("Hapus data dengan No. Agenda: " + id + "?")) {
     await fetch(`${endpointAktif}/Nomor/${id}`, { method: "DELETE" });
     loadData();
   }
 }
 
-// --- PERBAIKAN DOWNLOAD PDF (STABIL & FULL DATA) ---
+// --- FUNGSI DOWNLOAD PDF FINAL (ANTI TERHIMPIT) ---
 async function downloadPDF() {
   const element = document.getElementById("tableSection");
   const actionCols = document.querySelectorAll('.action-col');
   const pdfHeader = document.getElementById('pdfHeader');
   
-  if (document.querySelectorAll("#dataBody tr").length === 0) return alert("Data kosong!");
+  if (document.querySelectorAll("#dataBody tr").length === 0) return alert("Tidak ada data untuk dicetak.");
 
-  // Sembunyikan elemen yang tidak perlu masuk PDF
+  // Sembunyikan kolom aksi & tampilkan header laporan
   actionCols.forEach(col => col.style.display = 'none');
   pdfHeader.classList.remove('hidden');
   document.getElementById('pdfSubTitle').textContent = tableTitle.textContent;
 
-  // Konfigurasi agar PDF mengambil seluruh tinggi tabel (Full Page)
   const opt = {
-    margin: 0.3,
-    filename: `E-Surat_${tableTitle.textContent}.pdf`,
+    margin: [0.4, 0.4],
+    filename: `Laporan_E-Surat_${tableTitle.textContent.replace(/\s+/g, '_')}.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
-      scale: 2, 
+      scale: 3, // Skala lebih tinggi agar teks tajam
       useCORS: true,
+      letterRendering: true, // Mencegah huruf tumpang tindih
       scrollY: 0,
-      scrollX: 0,
-      windowWidth: element.scrollWidth // Ambil seluruh lebar tabel
+      scrollX: 0
     },
     jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
   };
 
   try {
-    window.scrollTo(0, 0); // Reset scroll sebelum render
+    window.scrollTo(0, 0); 
     await html2pdf().set(opt).from(element).save();
   } catch (e) {
-    console.error(e);
-    alert("Gagal mengunduh PDF");
+    alert("Proses cetak gagal.");
   } finally {
-    // Kembalikan UI web
+    // Kembalikan tampilan semula
     actionCols.forEach(col => col.style.display = '');
     pdfHeader.classList.add('hidden');
   }
